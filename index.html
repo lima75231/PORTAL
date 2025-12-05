@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <title>Portal CNES – Envio de Documentos Profissionais</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="page">
+  <div class="card">
+
+    <div class="card-header">
+      <h1>Portal CNES – Envio de Documentos Profissionais</h1>
+      <p>
+        Envie os documentos do servidor de forma segura e organizada para análise e cadastro no CNES.
+      </p>
+    </div>
+
+    <form action="upload.php" method="POST" enctype="multipart/form-data">
+
+      <input type="hidden" name="_captcha" value="false">
+      <input type="hidden" name="_template" value="table">
+      <input type="hidden" name="_subject" value="Novo envio de documentos – Portal CNES">
+
+      <!-- DADOS DA UNIDADE -->
+      <div class="section">
+        <h2>Dados da Unidade / Empresa</h2>
+        <p class="sub">Preencha os dados da unidade responsável.</p>
+
+        <label>Nome da Unidade / Empresa</label>
+        <input type="text" name="empresa" required>
+
+        <div class="grid-2">
+          <div>
+            <label>Município</label>
+            <input type="text" name="municipio" required>
+          </div>
+          <div>
+            <label>Responsável</label>
+            <input type="text" name="responsavel" required>
+          </div>
+        </div>
+
+        <div class="grid-2">
+          <div>
+            <label>E-mail para retorno</label>
+            <input type="email" name="email_contato" required>
+          </div>
+          <div>
+            <label>Telefone</label>
+            <input type="text" name="telefone">
+          </div>
+        </div>
+      </div>
+
+      <!-- DADOS DO SERVIDOR -->
+      <div class="section">
+        <h2>Dados do Servidor</h2>
+        <p class="sub">Informe apenas nome e cargo.</p>
+
+        <label>Nome completo</label>
+        <input type="text" name="nome_servidor" required>
+
+        <label>Cargo / Função</label>
+        <input type="text" name="cargo_servidor" required>
+      </div>
+
+      <!-- DOCUMENTOS -->
+      <div class="section">
+        <h2>Envio de Documentos</h2>
+
+        <div class="upload-box">
+          <p>Anexar arquivos</p>
+          <span class="sub">PDF, JPG ou PNG.</span>
+
+          <div class="upload-grid">
+            <div>
+              <label>Documento com foto (RG ou CNH)</label>
+              <input type="file" name="doc_identidade" accept=".pdf,.jpg,.jpeg,.png" required>
+            </div>
+            <div>
+              <label>CPF</label>
+              <input type="file" name="doc_cpf" accept=".pdf,.jpg,.jpeg,.png">
+            </div>
+            <div>
+              <label>Cartão SUS</label>
+              <input type="file" name="doc_cns" accept=".pdf,.jpg,.jpeg,.png">
+            </div>
+            <div>
+              <label>Comprovante de Endereço</label>
+              <input type="file" name="doc_endereco" accept=".pdf,.jpg,.jpeg,.png">
+            </div>
+            <div>
+              <label>Diploma / Conselho</label>
+              <input type="file" name="doc_diploma" accept=".pdf,.jpg,.jpeg,.png">
+            </div>
+            <div>
+              <label>Contrato / Portaria</label>
+              <input type="file" name="doc_contrato" accept=".pdf,.jpg,.jpeg,.png">
+            </div>
+          </div>
+        </div>
+
+        <div class="checkbox-row">
+          <input type="checkbox" required>
+          <label>
+            Declaro que os dados e documentos enviados são verdadeiros e autorizo uso exclusivo para cadastro CNES.
+          </label>
+        </div>
+
+        <p class="lgpd-text">
+          Os dados enviados serão utilizados exclusivamente para fins de cadastro no Cadastro Nacional
+          de Estabelecimentos de Saúde (CNES), conforme LGPD – Lei nº 13.709/2018.
+        </p>
+
+      </div>
+
+      <button type="submit" class="btn-primary">
+        Enviar documentos com segurança
+      </button>
+
+    </form>
+
+    <div class="footer">
+      Portal CNES – Sistema de Recebimento de Documentos
+      <div class="whats-placeholder">Atendimento via WhatsApp (em breve)</div>
+    </div>
+
+  </div>
+</div>
+
+</body>
+</html>
