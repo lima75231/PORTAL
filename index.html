@@ -4,8 +4,6 @@
   <meta charset="UTF-8">
   <title>Portal CNES – Envio de Documentos Profissionais</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
-
-  <!-- CSS externo -->
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -15,106 +13,137 @@
       <div class="header">
         <h1 class="header-title">Portal CNES – Envio de Documentos Profissionais</h1>
         <p class="header-sub">
-          Preencha os dados da unidade, cadastre os servidores e envie tudo de forma organizada.
+          Preencha os dados da unidade, cadastre os servidores e envie os documentos de forma organizada.
         </p>
       </div>
 
+      <!-- Barra de progresso -->
       <div class="progress">
         <div class="progress-bar" id="progressBar"></div>
       </div>
       <div class="steps-labels">
         <span>1. Empresa</span>
         <span>2. Servidores</span>
-        <span>3. Revisão</span>
+        <span>3. Documentos & Revisão</span>
       </div>
 
-      <!-- ETAPA 1 -->
-      <div id="step1">
-        <h2>Etapa 1 – Dados da Unidade / Empresa</h2>
-        <p class="sub">Esses dados valem para todos os servidores deste envio.</p>
+      <!-- FORMULÁRIO COMPLETO -->
+      <form id="formPortal" action="upload.php" method="POST" enctype="multipart/form-data">
+        <!-- ETAPA 1 – EMPRESA -->
+        <div id="step1">
+          <h2>Etapa 1 – Dados da Unidade / Empresa</h2>
+          <p class="sub">Esses dados serão usados para todos os servidores deste envio.</p>
 
-        <div class="section">
-          <label>Nome da Unidade / Empresa</label>
-          <input id="empresa" type="text" required>
+          <div class="section">
+            <label for="empresa">Nome da Unidade / Empresa</label>
+            <input id="empresa" name="empresa" type="text" required>
 
-          <div class="grid-2">
-            <div>
-              <label>Município</label>
-              <input id="municipio" type="text" required>
+            <div class="grid-2">
+              <div>
+                <label for="municipio">Município</label>
+                <input id="municipio" name="municipio" type="text" required>
+              </div>
+              <div>
+                <label for="responsavel">Responsável</label>
+                <input id="responsavel" name="responsavel" type="text" required>
+              </div>
             </div>
-            <div>
-              <label>Responsável</label>
-              <input id="responsavel" type="text" required>
+
+            <div class="grid-2">
+              <div>
+                <label for="email">E-mail para contato</label>
+                <input id="email" name="email_contato" type="email" required>
+              </div>
+              <div>
+                <label for="telefone">Telefone / WhatsApp</label>
+                <input id="telefone" name="telefone" type="text">
+              </div>
             </div>
           </div>
 
-          <div class="grid-2">
-            <div>
-              <label>E-mail para contato</label>
-              <input id="email" type="email" required>
-            </div>
-            <div>
-              <label>Telefone / WhatsApp</label>
-              <input id="telefone" type="text">
-            </div>
+          <button type="button" class="btn btn-primary" onclick="goToStep(2)">Continuar para servidores</button>
+        </div>
+
+        <!-- ETAPA 2 – SERVIDORES -->
+        <div id="step2" class="hidden">
+          <h2>Etapa 2 – Cadastro de Servidores</h2>
+          <p class="sub">Adicione um ou mais servidores desta unidade. Você poderá revisar tudo antes de enviar.</p>
+
+          <div class="section server-card">
+            <label for="nome_servidor">Nome do servidor</label>
+            <input id="nome_servidor" type="text">
+
+            <label for="cargo_servidor">Cargo / Função</label>
+            <input id="cargo_servidor" type="text">
+
+            <button type="button" class="btn btn-secondary btn-inline" onclick="addServidor()">Adicionar servidor</button>
+          </div>
+
+          <div class="server-list" id="listaServidores">
+            <strong>Servidores adicionados:</strong>
+            <p class="sub">Nenhum servidor adicionado ainda.</p>
+          </div>
+
+          <div class="nav-row">
+            <button type="button" class="btn btn-secondary" onclick="goToStep(1)">Voltar</button>
+            <button type="button" class="btn btn-primary" onclick="goToStep(3)">Ir para documentos & revisão</button>
           </div>
         </div>
 
-        <button class="btn btn-primary" onclick="goToStep(2)">Continuar para servidores</button>
-      </div>
+        <!-- ETAPA 3 – DOCUMENTOS & REVISÃO -->
+        <div id="step3" class="hidden">
+          <h2>Etapa 3 – Documentos & Revisão</h2>
 
-      <!-- ETAPA 2 -->
-      <div id="step2" class="hidden">
-        <h2>Etapa 2 – Cadastro de Servidores</h2>
-        <p class="sub">Adicione quantos servidores precisar.</p>
+          <div class="section">
+            <h3>Revisão dos dados</h3>
+            <div class="resumo-box" id="resumoBox"></div>
+          </div>
 
-        <div class="section server-card">
-          <label>Nome do servidor</label>
-          <input id="nome_servidor" type="text">
+          <div class="section">
+            <h3>Envio de documentos</h3>
+            <p class="sub">
+              Preferencialmente envie um <strong>PDF único</strong> com todos os documentos dos servidores.
+              Se não for possível, você pode enviar os arquivos separados por tipo.
+            </p>
 
-          <label>Cargo / Função</label>
-          <input id="cargo_servidor" type="text">
+            <!-- PDF ÚNICO PRIMEIRO -->
+            <label for="doc_unico">Arquivo único (PDF com todos os documentos)</label>
+            <input id="doc_unico" name="doc_unico" type="file" accept=".pdf">
 
-          <h3>📎 Documentos do Servidor</h3>
+            <p class="separator">— ou envie separado por tipo —</p>
 
-          <label>Arquivo único (PDF com todos os documentos)</label>
-          <input id="doc_unico" type="file" accept=".pdf">
+            <!-- DOCUMENTOS PESSOAIS -->
+            <label for="doc_pessoais">Documentos pessoais (RG/CNH) – pode selecionar vários</label>
+            <input id="doc_pessoais" name="doc_pessoais[]" type="file" multiple accept=".pdf,.jpg,.jpeg,.png">
 
-          <p class="separator">ou envie separado</p>
+            <!-- COMPROVANTES DE RESIDÊNCIA -->
+            <label for="doc_residencias">Comprovantes de residência – pode selecionar vários</label>
+            <input id="doc_residencias" name="doc_residencias[]" type="file" multiple accept=".pdf,.jpg,.jpeg,.png">
 
-          <label>Documento pessoal (RG ou CNH)</label>
-          <input id="doc_pessoal" type="file">
+            <!-- CERTIFICADOS / DIPLOMAS -->
+            <label for="doc_certificados">Certificados / diplomas – pode selecionar vários</label>
+            <input id="doc_certificados" name="doc_certificados[]" type="file" multiple accept=".pdf,.jpg,.jpeg,.png">
 
-          <label>Comprovante de residência</label>
-          <input id="doc_residencia" type="file">
+            <div class="lgpd-box">
+              <label class="lgpd-label">
+                <input type="checkbox" name="termo_lgpd" required>
+                Declaro que os dados e documentos enviados são verdadeiros e autorizo o uso exclusivamente para análise e cadastro no CNES, em conformidade com a Lei Geral de Proteção de Dados (Lei nº 13.709/2018).
+              </label>
+            </div>
+          </div>
 
-          <label>Certificado / Diploma</label>
-          <input id="doc_certificado" type="file">
+          <!-- Campo oculto para enviar a lista de servidores em JSON -->
+          <input type="hidden" id="servidores_json" name="servidores_json">
 
-          <button class="btn btn-secondary btn-inline" onclick="addServidor()">Adicionar servidor</button>
+          <div class="nav-row">
+            <button type="button" class="btn btn-secondary" onclick="goToStep(2)">Voltar</button>
+            <button type="button" class="btn btn-primary" onclick="finalizarEnvio()">Enviar cadastro</button>
+          </div>
         </div>
-
-        <div class="server-list" id="listaServidores"></div>
-
-        <div class="nav-row">
-          <button class="btn btn-secondary" onclick="goToStep(1)">Voltar</button>
-          <button class="btn btn-primary" onclick="goToStep(3)">Ir para revisão</button>
-        </div>
-      </div>
-
-      <!-- ETAPA 3 -->
-      <div id="step3" class="hidden">
-        <h2>Etapa 3 – Revisão</h2>
-        <div class="resumo-box" id="resumoBox"></div>
-
-        <div class="nav-row">
-          <button class="btn btn-secondary" onclick="goToStep(2)">Voltar</button>
-          <button class="btn btn-primary" onclick="finalizarEnvio()">Finalizar envio (protótipo)</button>
-        </div>
-      </div>
+      </form>
 
       <div class="footer">
-        Portal CNES – Sistema de Recebimento de Documentos
+        Portal CNES – Sistema de Recebimento de Documentos Profissionais
       </div>
 
     </div>
@@ -125,57 +154,129 @@ let currentStep = 1;
 let servidores = [];
 
 function goToStep(step){
-  if(step === 2 && !empresa.value) return alert("Preencha os dados da empresa.");
-  if(step === 3 && servidores.length === 0) return alert("Adicione pelo menos um servidor.");
-  document.querySelectorAll('[id^="step"]').forEach(e => e.classList.add("hidden"));
-  document.getElementById("step"+step).classList.remove("hidden");
-  document.getElementById("progressBar").style.width = step * 33 + "%";
+  // Validação básica antes de avançar
+  if (step === 2 && currentStep === 1) {
+    if (!empresa.value.trim() ||
+        !municipio.value.trim() ||
+        !responsavel.value.trim() ||
+        !email.value.trim()) {
+      alert('Preencha os dados principais da unidade antes de continuar.');
+      return;
+    }
+  }
+
+  if (step === 3) {
+    if (servidores.length === 0) {
+      alert('Adicione pelo menos um servidor antes de ir para documentos & revisão.');
+      return;
+    }
+    gerarResumo();
+  }
+
+  currentStep = step;
+
+  document.getElementById('step1').classList.add('hidden');
+  document.getElementById('step2').classList.add('hidden');
+  document.getElementById('step3').classList.add('hidden');
+  document.getElementById('step' + step).classList.remove('hidden');
+
+  // Atualiza barra de progresso
+  const bar = document.getElementById('progressBar');
+  if (step === 1) bar.style.width = '33%';
+  if (step === 2) bar.style.width = '66%';
+  if (step === 3) bar.style.width = '100%';
 }
 
 function addServidor(){
-  let nome = nome_servidor.value;
-  let cargo = cargo_servidor.value;
-  let unico = doc_unico.files.length;
-  let p = doc_pessoal.files.length;
-  let r = doc_residencia.files.length;
-  let c = doc_certificado.files.length;
+  const nome = document.getElementById('nome_servidor').value.trim();
+  const cargo = document.getElementById('cargo_servidor').value.trim();
 
-  if(!nome || !cargo) return alert("Informe nome e cargo.");
-  if(!unico && !p && !r && !c) return alert("Envie ao menos um documento.");
+  if (!nome || !cargo) {
+    alert('Preencha nome e cargo do servidor.');
+    return;
+  }
 
-  let tipo = unico ? "PDF Único" : "Separado";
-  servidores.push({nome,cargo,tipo});
+  servidores.push({ nome, cargo });
 
-  nome_servidor.value = cargo_servidor.value = "";
-  doc_unico.value = doc_pessoal.value = doc_residencia.value = doc_certificado.value = "";
-  render();
+  // limpa os campos
+  document.getElementById('nome_servidor').value = '';
+  document.getElementById('cargo_servidor').value = '';
+
+  renderServidores();
 }
 
-function render(){
-  let div = document.getElementById("listaServidores");
-  div.innerHTML = servidores.map((s,i)=>`
-    <div class="server-list-item">
-      ${i+1}. ${s.nome} – ${s.cargo}
-      <span class="server-doc-tag">${s.tipo}</span>
-    </div>
-  `).join("");
+function renderServidores(){
+  const listaDiv = document.getElementById('listaServidores');
+
+  if (servidores.length === 0) {
+    listaDiv.innerHTML = `
+      <strong>Servidores adicionados:</strong>
+      <p class="sub">Nenhum servidor adicionado ainda.</p>
+    `;
+    return;
+  }
+
+  let html = '<strong>Servidores adicionados:</strong><div style="margin-top:6px;">';
+  servidores.forEach((s, i) => {
+    html += `
+      <div class="server-list-item">
+        <span>${i+1}. ${s.nome} – ${s.cargo}</span>
+      </div>
+    `;
+  });
+  html += '</div>';
+
+  listaDiv.innerHTML = html;
 }
 
 function gerarResumo(){
-  resumoBox.innerHTML = `
-    <p><b>Empresa:</b> ${empresa.value}</p>
-    <p><b>Município:</b> ${municipio.value}</p>
-    <p><b>Responsável:</b> ${responsavel.value}</p>
-    <p><b>E-mail:</b> ${email.value}</p>
-    <ul>${servidores.map(s=>`<li>${s.nome} – ${s.cargo} (${s.tipo})</li>`).join("")}</ul>
+  const empresaVal = empresa.value.trim();
+  const municipioVal = municipio.value.trim();
+  const responsavelVal = responsavel.value.trim();
+  const emailVal = email.value.trim();
+  const telefoneVal = telefone.value.trim();
+
+  let html = `
+    <p><strong>Unidade / Empresa:</strong> ${empresaVal}</p>
+    <p><strong>Município:</strong> ${municipioVal}</p>
+    <p><strong>Responsável:</strong> ${responsavelVal}</p>
+    <p><strong>E-mail:</strong> ${emailVal}</p>
+    <p><strong>Telefone / WhatsApp:</strong> ${telefoneVal || '-'}</p>
+    <h3>Servidores cadastrados:</h3>
+    <ul>
   `;
+
+  servidores.forEach(s => {
+    html += `<li>${s.nome} – ${s.cargo}</li>`;
+  });
+
+  html += '</ul>';
+
+  document.getElementById('resumoBox').innerHTML = html;
 }
 
 function finalizarEnvio(){
-  gerarResumo();
-  alert("Pronto para integrar com o backend.");
+  const docUnico = document.getElementById('doc_unico');
+  const docPessoais = document.getElementById('doc_pessoais');
+  const docResidencias = document.getElementById('doc_residencias');
+  const docCertificados = document.getElementById('doc_certificados');
+
+  const temUnico = docUnico.files.length > 0;
+  const temPessoais = docPessoais.files.length > 0;
+  const temResid = docResidencias.files.length > 0;
+  const temCert = docCertificados.files.length > 0;
+
+  if (!temUnico && !temPessoais && !temResid && !temCert) {
+    alert('Envie pelo menos um documento: PDF único ou arquivos separados.');
+    return;
+  }
+
+  // Joga lista de servidores para um campo oculto em JSON
+  document.getElementById('servidores_json').value = JSON.stringify(servidores);
+
+  // Envia o formulário de fato
+  document.getElementById('formPortal').submit();
 }
 </script>
-
 </body>
 </html>
