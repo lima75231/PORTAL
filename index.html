@@ -277,6 +277,12 @@ function finalizarEnvio(){
   // Envia o formulário de fato
   document.getElementById('formPortal').submit();
 }
+
+document.addEventListener('DOMContentLoaded', function () {
+  goToStep(1); // garante que só a Etapa 1 aparece ao carregar
+});
+
+
 </script>
 </body>
 </html>
